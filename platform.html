@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voxel Engine | Compiler Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #06070d;
+            --panel-bg: #0d0f18;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
+            --border: rgba(59, 130, 246, 0.2);
+            --text: #e2e8f0;
+            --text-muted: #64748b;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar de la Plataforma */
+        .platform-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            height: 60px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-area {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        /* Contenedor Principal Splitted */
+        .workspace {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+        }
+
+        /* Panel Izquierdo: Compilador e Inputs */
+        .compiler-panel {
+            width: 380px;
+            background: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        .panel-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            margin: 0;
+            color: #fff;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+            background: #07080d;
+            border: 1px solid var(--border);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        /* Pantalla de Consola/Telemetría */
+        .console-output {
+            flex: 1;
+            background: #040508;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #10b981;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Panel Derecho: Visualizador de Matriz Completa */
+        .viewport-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, #0b0d16 0%, #05060a 100%);
+            position: relative;
+        }
+
+        canvas {
+            max-width: 90%;
+            max-height: 85%;
+        }
+
+        .viewport-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="platform-header">
+        <div class="logo-area">
+            <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%;"></div>
+            VOXEL ENGINE // PLATFORM STUDIO
+        </div>
+        <button class="back-btn" onclick="window.location.href='index.html'">← Exit Studio</button>
+    </header>
+
+    <div class="workspace">
+        <aside class="compiler-panel">
+            <h2 class="panel-title">Equation Compiler</h2>
+            
+            <div class="form-group">
+                <label>Mathematical Function Input</label>
+                <select id="equation-selector">
+                    <option value="wave3d">f(x, y) = sin(x) * cos(y)</option>
+                    <option value="cone">f(x, y) = 1 - sqrt(x² + y²)</option>
+                    <option value="pulse">f(x, y) = cos(x² - y²)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Matrix Sampling Resolution</label>
+                <select id="resolution-selector">
+                    <option value="8">8³ Grid (Draft)</option>
+                    <option value="16" selected>16³ Grid (Standard Hardware)</option>
+                    <option value="24">24³ Grid (High-Density Push)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Signal Modulation Frequency</label>
+                <input type="range" id="freq-modulation" min="0.4" max="2.5" step="0.1" value="1.0">
+            </div>
+
+            <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
+                <label>Pipeline Console Logs</label>
+                <div class="console-output" id="console-logs">Initializing core pipeline...</div>
+            </div>
+        </aside>
+
+        <main class="viewport-panel">
+            <div class="viewport-badge">RENDER MODE: VOLUMETRIC_MATRIX</div>
+            <canvas id="studio-canvas" width="550" height="480"></canvas>
+        </main>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('studio-canvas');
+        const ctx = canvas.getContext('2d');
+        const eqSelect = document.getElementById('equation-selector');
+        const resSelect = document.getElementById('resolution-selector');
+        const freqSlider = document.getElementById('freq-modulation');
+        const consoleLogs = document.getElementById('console-logs');
+
+        let tick = 0;
+
+        // Proyección isométrica limpia
+        function project(x, y, z) {
+            const isoX = (x - y) * Math.cos(Math.PI / 6);
+            const isoY = (x + y) * Math.sin(Math.PI / 6) - z;
+            return {
+                x: canvas.width / 2 + isoX,
+                y: canvas.height / 2 + isoY + 20
+            };
+        }
+
+        function logPipeline(equationName, size) {
+            const timestamp = new Date().toLocaleTimeString();
+            consoleLogs.innerHTML = `[${timestamp}] COMPILER: Parsing function [${equationName.toUpperCase()}]\n` +
+                                    `[${timestamp}] MEMORY: Allocated ${Math.pow(size, 3)} voxel positions\n` +
+                                    `[${timestamp}] PIPELINE: Direct stream mapped to physical matrix.\n` +
+                                    `[${timestamp}] STATUS: Streaming 60 FPS...`;
+        }
+
+        function renderWorkspace() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            tick += 0.04;
+
+            const gridSize = parseInt(resSelect.value);
+            const freq = parseFloat(freqSlider.value);
+            const equation = eqSelect.value;
+
+            // Renderizar de atrás hacia adelante para simular oclusión 3D real
+            for (let x = 0; x < gridSize; x++) {
+                for (let y = 0; y < gridSize; y++) {
+                    
+                    // Normalización de coordenadas espaciales
+                    const cx = (x - gridSize / 2) * (12 / gridSize);
+                    const cy = (y - gridSize / 2) * (12 / gridSize);
+                    let cz = 0;
+
+                    // Lógicas matemáticas reales discretizadas en tiempo real
+                    if (equation === 'wave3d') {
+                        cz = Math.sin(cx * freq + tick) * Math.cos(cy * freq + tick) * 4;
+                    } else if (equation === 'cone') {
+                        const dist = Math.sqrt(cx*cx + cy*cy);
+                        cz = Math.sin(dist * freq - tick) * 3;
+                    } else if (equation === 'pulse') {
+                        cz = Math.cos((cx*cx - cy*cy) * 0.2 * freq - tick) * 3.5;
+                    }
+
+                    // Escala visual de los cubos según resolución elegida
+                    const scaleFactor = 240 / gridSize;
+                    const pt = project(cx * scaleFactor, cy * scaleFactor, cz * (scaleFactor * 0.4));
+                    
+                    // Tamaño dinámico: los elementos más altos brillan y resaltan más
+                    const radius = Math.max(1.5, (scaleFactor * 0.15) + cz * 0.1);
+                    const opacity = Math.max(0.15, Math.min(1, (cz + 5) / 10));
+
+                    ctx.beginPath();
+                    ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+                    
+                    // Gradientes Reactivos a la Altura
+                    const hue = 210 + (cz * 4);
+                    ctx.fillStyle = `hsla(${hue}, 90%, 55%, ${opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            requestAnimationFrame(renderWorkspace);
+        }
+
+        // Oyentes para actualizar la consola interactiva en tiempo real al cambiar parámetros
+        eqSelect.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
+        resSelect.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
+        freqSlider.addEventListener('input', () => logPipeline(eqSelect.value, resSelect.value));
+
+        // Lanzar ejecución por primera vez
+        logPipeline(eqSelect.value, resSelect.value);
+        renderWorkspace();
+    </script>
+</body>
+</html>

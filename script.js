@@ -102,3 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initDemo();
     initAnimations();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const explorePlatformBtn = document.querySelector('[data-translate="nav-btn"]');
+    
+    if (explorePlatformBtn) {
+        explorePlatformBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Redirección directa al estudio de desarrollo de la plataforma
+            window.location.href = 'platform.html';
+        });
+    }
+});
