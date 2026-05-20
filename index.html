@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Voxel | Lc</title>
+
+    <meta
+        name="description"
+        content="Voxel-based volumetric visualization platform for immersive STEM learning and real-time mathematical rendering."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="background-grid"></div>
+    <div class="background-glow glow-1"></div>
+    <div class="background-glow glow-2"></div>
+
+
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-dot"></span>
+            Voxel
+        </div>
+
+        <nav>
+            <a href="#technology" data-translate="nav-tech">Technology</a>
+            <a href="#system" data-translate="nav-system">System</a>
+            <a href="#vision" data-translate="nav-vision">Vision</a>
+            <a href="#demo" data-translate="nav-demo">Demo</a>
+            <a href="#horizon" data-translate="nav-horizon">Horizon</a>
+        </nav>
+
+        <div style="display: flex; align-items: center; gap: 1.5rem;">
+            <div class="lang-selector">
+                <button id="btn-en" class="lang-btn active">EN</button>
+                <button id="btn-es" class="lang-btn">ES</button>
+            </div>
+            
+            <button class="nav-button" data-translate="nav-btn">
+                Explore Platform
+            </button>
+        </div>
+    </header>
+
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-left">
+
+                <div class="tag" data-translate="hero-tag">
+                    VOLUMETRIC COMPUTING PLATFORM
+                </div>
+
+                <h1 data-translate="hero-title">
+                    Visualize Mathematics Beyond Screens.
+                </h1>
+
+                <p data-translate="hero-desc">
+                    A voxel-based volumetric system capable of transforming
+                    mathemataking equations into immersive spatial experiences
+                    through real-time computational rendering.
+                </p>
+
+                <div class="hero-buttons">
+                    <button class="primary-button" data-translate="btn-watch">
+                        Watch Demo
+                    </button>
+
+                    <button class="secondary-button" data-translate="btn-explore">
+                        Explore Technology
+                    </button>
+                </div>
+
+                <div class="stats">
+
+                    <div class="stat-card">
+                        <h3>16³</h3>
+                        <span data-translate="stat-grid">Voxel Grid</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>3D</h3>
+                        <span data-translate="stat-spatial">Spatial Rendering</span>
+                    </div>
+
+                    <div class="stat-card">
+                        <h3>Real-Time</h3>
+                        <span data-translate="stat-pipeline">Processing Pipeline</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="hero-right">
+
+                <div class="hero-cube">
+
+                    <div class="cube-glow"></div>
+
+                    <div class="cube-grid">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="technology section-spacing" id="technology">
+
+            <div class="section-header">
+                <span class="section-label" data-translate="tech-label">TECHNOLOGY</span>
+                <h2 data-translate="tech-title">
+                    A Complete Spatial Visualization Pipeline
+                </h2>
+                <p data-translate="tech-desc">
+                    Combining computational mathematics, embedded systems and
+                    volumetric rendering into a unified educational platform.
+                </p>
+            </div>
+
+            <div class="tech-grid">
+
+                <article class="tech-card">
+                    <div class="card-number">01</div>
+                    <h3 data-translate="card1-title">Python Processing Engine</h3>
+                    <p data-translate="card1-desc">
+                        Generates mathematical structures, spatial coordinates
+                        and volumetric data representations.
+                    </p>
+                </article>
+
+                <article class="tech-card">
+                    <div class="card-number">02</div>
+                    <h3 data-translate="card2-title">Embedded Translation Layer</h3>
+                    <p data-translate="card2-desc">
+                        Converts high-level computational logic into optimized
+                        low-level instructions for hardware control.
+                    </p>
+                </article>
+
+                <article class="tech-card">
+                    <div class="card-number">03</div>
+                    <h3 data-translate="card3-title">Voxel Rendering System</h3>
+                    <p data-translate="card3-desc">
+                        Displays equations and spatial structures through a
+                        physical 3D voxel environment.
+                    </p>
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <section class="system section-spacing" id="system">
+
+            <div class="section-header">
+                <span class="section-label" data-translate="sys-label">SYSTEM ARCHITECTURE</span>
+                <h2 data-translate="sys-title">
+                    Mathematical Input To Physical Visualization
+                </h2>
+            </div>
+
+            <div class="pipeline">
+
+                <div class="pipeline-item">
+                    <span data-translate="pipe-input">Mathematical Input</span>
+                </div>
+
+                <div class="pipeline-line"></div>
+
+                <div class="pipeline-item">
+                    <span data-translate="pipe-engine">Python Engine</span>
+                </div>
+
+                <div class="pipeline-line"></div>
+
+                <div class="pipeline-item">
+                    <span data-translate="pipe-layer">C Translation Layer</span>
+                </div>
+
+                <div class="pipeline-line"></div>
+
+                <div class="pipeline-item">
+                    <span data-translate="pipe-display">Voxel Display</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="vision section-spacing" id="vision">
+
+            <div class="vision-container">
+
+                <div class="vision-left">
+                    <span class="section-label" data-translate="vision-label">VISION</span>
+
+                    <h2 data-translate="vision-title">
+                        Redefining How Humans Interact With Mathematics
+                    </h2>
+                </div>
+
+                <div class="vision-right">
+                    <p data-translate="vision-p1">
+                        Our goal is to transform abstract scientific concepts
+                        into tangible spatial experiences through volumetric
+                        visualization and interactive computational systems.
+                    </p>
+
+                    <p data-translate="vision-p2">
+                        We believe the future of STEM learning depends on
+                        immersive representations capable of bridging the gap
+                        between equations and intuition.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="demo section-spacing" id="demo">
+
+            <div class="section-header">
+                <span class="section-label" data-translate="demo-label">INTERACTIVE DEMO</span>
+                <h2 data-translate="demo-title">
+                    Real-Time Volumetric Function Simulation
+                </h2>
+            </div>
+
+            <div class="demo-box">
+
+                <div class="demo-overlay"></div>
+
+                <div class="demo-content">
+                    <h3 data-translate="demo-box-h3">Spatial Function Rendering</h3>
+                    <p data-translate="demo-box-p">
+                        Interactive 3D mathematical visualization interface.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="horizon section-spacing" id="horizon">
+
+            <div class="section-header">
+                <span class="section-label" data-translate="horizon-label">PLATFORM HORIZON</span>
+                <h2 data-translate="horizon-title">
+                    The Future of Volumetric Architecture
+                </h2>
+                <p data-translate="horizon-desc">
+                    The 16³ voxel engine is only the beginning. Moving from physical hardware instances to a global spatial computing standard.
+                </p>
+            </div>
+
+            <div class="roadmap-container" style="display: flex; flex-direction: column; gap: 2rem; max-width: 900px; margin: 0 auto; padding: 0 20px;">
+                
+                <div class="roadmap-phase" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(59,130,246,0.1); border-left: 4px solid #3b82f6; padding: 24px; border-radius: 0 12px 12px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-family: monospace; font-size: 0.8rem; color: #3b82f6; font-weight: bold;">PHASE 01 // CORE ENGINE</span>
+                        <span style="font-size: 0.75rem; background: rgba(59,130,246,0.1); color: #3b82f6; padding: 2px 8px; border-radius: 4px; font-weight: 600;">ACTIVE</span>
+                    </div>
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.15rem; color: #fff;" data-translate="phase1-title">Real-Time Discretization Engine</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #9ca3af; line-height: 1.5;" data-translate="phase1-desc">
+                        Development of the computational core pipeline in Python and deployment of low-latency embedded translation maps onto the local physical spatial array.
+                    </p>
+                </div>
+
+                <div class="roadmap-phase" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid rgba(139,92,246,0.4); padding: 24px; border-radius: 0 12px 12px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-family: monospace; font-size: 0.8rem; color: #a78bfa; font-weight: bold;">PHASE 02 // OPEN SDK</span>
+                        <span style="font-size: 0.75rem; background: rgba(255,255,255,0.05); color: #9ca3af; padding: 2px 8px; border-radius: 4px;">PIPELINE</span>
+                    </div>
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.15rem; color: #fff;" data-translate="phase2-title">Universal Volumetric API</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #9ca3af; line-height: 1.5;" data-translate="phase2-desc">
+                        Decoupling software from hardware constraints. Launching an open-source development kit allowing any scientific engine to stream 3D coordinate arrays seamlessly.
+                    </p>
+                </div>
+
+                <div class="roadmap-phase" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid rgba(255,255,255,0.1); padding: 24px; border-radius: 0 12px 12px 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-family: monospace; font-size: 0.8rem; color: #9ca3af; font-weight: bold;">PHASE 03 // MULTI-DATA EXPANSION</span>
+                        <span style="font-size: 0.75rem; background: rgba(255,255,255,0.05); color: #9ca3af; padding: 2px 8px; border-radius: 4px;">RESEARCH</span>
+                    </div>
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.15rem; color: #fff;" data-translate="phase3-title">Fluid Dynamics & Medical Tomography</h3>
+                    <p style="margin: 0; font-size: 0.9rem; color: #9ca3af; line-height: 1.5;" data-translate="phase3-desc">
+                        Expanding the visual engine to stream multi-variable scientific fields: mapping vector fields, real-time wave propagation mechanics, and volumetric medical data slicing.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            <div>
+                VoxelMath © 2026
+            </div>
+
+            <div data-translate="footer-credits">
+                Spatial Computing • STEM Visualization • Embedded Systems
+            </div>
+        </footer>
+
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
