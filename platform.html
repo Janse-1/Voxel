@@ -81,6 +81,7 @@
             flex-direction: column;
             gap: 20px;
             box-sizing: border-box;
+            overflow-y: auto;
         }
 
         .panel-title {
@@ -104,7 +105,7 @@
             letter-spacing: 0.05em;
         }
 
-        select, input[type="range"] {
+        select, input[type="range"], input[type="text"] {
             width: 100%;
             background: #07080d;
             border: 1px solid var(--border);
@@ -113,10 +114,18 @@
             border-radius: 6px;
             box-sizing: border-box;
             outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="text"] {
+            font-family: monospace;
+            color: #3b82f6;
+            font-weight: bold;
         }
 
         /* Pantalla de Consola/Telemetría */
         .console-output {
+            min-height: 150px;
             flex: 1;
             background: #040508;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -173,11 +182,26 @@
             <h2 class="panel-title">Equation Compiler</h2>
             
             <div class="form-group">
-                <label>Mathematical Function Input</label>
+                <label>Simulation Core Mode</label>
+                <select id="mode-selector">
+                    <option value="math">Standard Pure Mathematics</option>
+                    <option value="integral">Calculus: Volumetric Riemann Integral</option>
+                    <option value="photoelectric">Quantum Physics: Photoelectric Emission</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Custom Formula Parser (Text Input)</label>
+                <input type="text" id="formula-input" value="sin(x) * cos(y)" placeholder="e.g. sin(x) * cos(y)">
+            </div>
+
+            <div class="form-group">
+                <label>Mathematical Presets (Or Select Mode Above)</label>
                 <select id="equation-selector">
                     <option value="wave3d">f(x, y) = sin(x) * cos(y)</option>
                     <option value="cone">f(x, y) = 1 - sqrt(x² + y²)</option>
                     <option value="pulse">f(x, y) = cos(x² - y²)</option>
+                    <option value="custom_input">Use Custom Formula Input ↑</option>
                 </select>
             </div>
 
@@ -215,6 +239,10 @@
         const freqSlider = document.getElementById('freq-modulation');
         const consoleLogs = document.getElementById('console-logs');
 
+        // Referencias seguras a los nuevos componentes del DOM
+        const modeSelector = document.getElementById('mode-selector');
+        const formulaInput = document.getElementById('formula-input');
+
         let tick = 0;
 
         // Proyección isométrica limpia
@@ -227,12 +255,77 @@
             };
         }
 
-        function logPipeline(equationName, size) {
+        // Intérprete y Evaluador Matemático Procedimental Seguro
+        function evaluateEquation(equation, cx, cy, freq, t) {
+            const mode = modeSelector.value;
+
+            // 1. Intercepción Cuántica: Efecto Fotoeléctrico
+            if (mode === 'photoelectric') {
+                const threshold = 0.8; 
+                // Fenómeno ondulatorio base golpeando la superficie metálica
+                const energyWave = Math.sin(cx * freq + t) * Math.cos(cy * freq + t) * 3;
+                // Si supera la función de trabajo del metal, los electrones se eyectan (vóxeles suben libremente)
+                return energyWave > threshold ? energyWave * 1.8 : 0.1; 
+            }
+
+            // 2. Si el usuario seleccionó evaluar la caja de texto directo
+            if (equation === 'custom_input') {
+                try {
+                    let textFormula = formulaInput.value.toLowerCase()
+                        .replace(/x/g, `(${cx})`)
+                        .replace(/y/g, `(${cy})`)
+                        .replace(/sin/g, 'Math.sin')
+                        .replace(/cos/g, 'Math.cos')
+                        .replace(/sqrt/g, 'Math.sqrt')
+                        .replace(/pi/g, 'Math.PI');
+                    
+                    let evalResult = Function(`return ${textFormula}`)();
+                    return isNaN(evalResult) ? 0 : evalResult * freq;
+                } catch (e) {
+                    return 0; // Protege el render si escribe una fórmula incompleta
+                }
+            }
+
+            // 3. Ecuaciones Matemáticas por Defecto
+            switch (equation) {
+                case 'wave3d':
+                    return Math.sin(cx * freq + t) * Math.cos(cy * freq + t) * 4;
+                case 'cone':
+                    const dist = Math.sqrt(cx * cx + cy * cy);
+                    return Math.sin(dist * freq - t) * 3;
+                case 'pulse':
+                    return Math.cos((cx * cx - cy * cy) * 0.2 * freq - t) * 3.5;
+                default:
+                    return 0;
+            }
+        }
+
+        // Consola de telemetría avanzada corregida (evita errores de propiedades undefined)
+        function logPipeline(equationName, size, extraData = {}) {
             const timestamp = new Date().toLocaleTimeString();
-            consoleLogs.innerHTML = `[${timestamp}] COMPILER: Parsing function [${equationName.toUpperCase()}]\n` +
-                                    `[${timestamp}] MEMORY: Allocated ${Math.pow(size, 3)} voxel positions\n` +
-                                    `[${timestamp}] PIPELINE: Direct stream mapped to physical matrix.\n` +
-                                    `[${timestamp}] STATUS: Streaming 60 FPS...`;
+            const mode = modeSelector.value;
+            let analyticsText = '';
+
+            // Protección de datos opcionales de entrada
+            const volume = extraData.volume !== undefined ? extraData.volume : 0;
+            const currentFreq = extraData.freq !== undefined ? extraData.freq : parseFloat(freqSlider.value);
+
+            if (mode === 'integral') {
+                analyticsText = `\n[${timestamp}] ANALYTICS: Calculated Volume under Surface: ${volume.toFixed(4)} u³\n` +
+                                `[${timestamp}] CALC: Riemann Double Integral [∫∫ f(x,y) dx dy] Concluded.`;
+            } else if (mode === 'photoelectric') {
+                const h = 6.626e-34; 
+                const freqHz = currentFreq * 1.4e14;
+                const energy = (h * freqHz * 1e19).toFixed(3); 
+                analyticsText = `\n[${timestamp}] QUANTUM: Incident Photon Energy (h*ν): ${energy} eV\n` +
+                                `[${timestamp}] STATUS: Electron kinetic discharge verified. Threshold cleared.`;
+            } else {
+                analyticsText = `\n[${timestamp}] PHYSICS: Wave Propagation Phase: ${(tick % (2 * Math.PI)).toFixed(2)} rad`;
+            }
+
+            consoleLogs.innerHTML = `[${timestamp}] COMPILER: Parsing target [${equationName.toUpperCase()}] [MODE: ${mode.toUpperCase()}]\n` +
+                                    `[${timestamp}] MEMORY: Allocated ${Math.pow(size, 3)} voxel positions in space.` + 
+                                    analyticsText + `\n[${timestamp}] PIPELINE: Direct stream streaming at 60 FPS...`;
         }
 
         function renderWorkspace() {
@@ -242,54 +335,78 @@
             const gridSize = parseInt(resSelect.value);
             const freq = parseFloat(freqSlider.value);
             const equation = eqSelect.value;
+            const mode = modeSelector.value;
 
-            // Renderizar de atrás hacia adelante para simular oclusión 3D real
+            let volumetricSum = 0; 
+
+            // Renderizado Isométrico de atrás hacia adelante
             for (let x = 0; x < gridSize; x++) {
                 for (let y = 0; y < gridSize; y++) {
                     
-                    // Normalización de coordenadas espaciales
                     const cx = (x - gridSize / 2) * (12 / gridSize);
                     const cy = (y - gridSize / 2) * (12 / gridSize);
-                    let cz = 0;
+                    
+                    let cz = evaluateEquation(equation, cx, cy, freq, tick);
 
-                    // Lógicas matemáticas reales discretizadas en tiempo real
-                    if (equation === 'wave3d') {
-                        cz = Math.sin(cx * freq + tick) * Math.cos(cy * freq + tick) * 4;
-                    } else if (equation === 'cone') {
-                        const dist = Math.sqrt(cx*cx + cy*cy);
-                        cz = Math.sin(dist * freq - tick) * 3;
-                    } else if (equation === 'pulse') {
-                        cz = Math.cos((cx*cx - cy*cy) * 0.2 * freq - tick) * 3.5;
+                    if (cz > 0) {
+                        volumetricSum += cz * (12 / gridSize) * (12 / gridSize);
                     }
 
-                    // Escala visual de los cubos según resolución elegida
                     const scaleFactor = 240 / gridSize;
                     const pt = project(cx * scaleFactor, cy * scaleFactor, cz * (scaleFactor * 0.4));
                     
-                    // Tamaño dinámico: los elementos más altos brillan y resaltan más
                     const radius = Math.max(1.5, (scaleFactor * 0.15) + cz * 0.1);
-                    const opacity = Math.max(0.15, Math.min(1, (cz + 5) / 10));
+                    let opacity = Math.max(0.15, Math.min(1, (cz + 5) / 10));
 
+                    // --- MÓDULO INTEGRAL: Proyección de Columnas de Riemann ---
+                    if (mode === 'integral') {
+                        const basePt = project(cx * scaleFactor, cy * scaleFactor, 0);
+                        ctx.beginPath();
+                        ctx.moveTo(basePt.x, basePt.y);
+                        ctx.lineTo(pt.x, pt.y);
+                        ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.25})`;
+                        ctx.lineWidth = scaleFactor * 0.4;
+                        ctx.stroke();
+                    }
+
+                    // --- DIBUJO DEL VÓXEL INDIVIDUAL ---
                     ctx.beginPath();
                     ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
                     
-                    // Gradientes Reactivos a la Altura
-                    const hue = 210 + (cz * 4);
+                    // Colores temáticos dinámicos según el modo científico
+                    let hue = 210 + (cz * 4); 
+                    if (mode === 'photoelectric') {
+                        hue = 135 + (cz * 12); // Tono Verde Esmeralda Cuántico
+                        opacity = cz > 0.3 ? 0.85 : 0.15;
+                    } else if (mode === 'integral') {
+                        hue = 265 + (cz * 2); // Tono Violeta Matemático de Datos
+                    }
+
                     ctx.fillStyle = `hsla(${hue}, 90%, 55%, ${opacity})`;
                     ctx.fill();
                 }
             }
 
+            // Actualización segura y amortiguada del Log en consola para no congelar el navegador
+            if (Math.random() < 0.02) { 
+                logPipeline(equation, gridSize, { volume: volumetricSum, freq: freq });
+            }
+
             requestAnimationFrame(renderWorkspace);
         }
 
-        // Oyentes para actualizar la consola interactiva en tiempo real al cambiar parámetros
+        // Event listeners globales mapeados limpiamente
         eqSelect.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
         resSelect.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
         freqSlider.addEventListener('input', () => logPipeline(eqSelect.value, resSelect.value));
+        modeSelector.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
+        formulaInput.addEventListener('input', () => {
+            eqSelect.value = 'custom_input'; // Cambia automáticamente el preset al escribir texto libre
+            logPipeline('CUSTOM_INPUT', resSelect.value);
+        });
 
-        // Lanzar ejecución por primera vez
-        logPipeline(eqSelect.value, resSelect.value);
+        // Lanzar de forma segura la primera ejecución del sistema
+        logPipeline(eqSelect.value, resSelect.value, { volume: 0, freq: parseFloat(freqSlider.value) });
         renderWorkspace();
     </script>
 </body>
