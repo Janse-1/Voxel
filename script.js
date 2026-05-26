@@ -114,3 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const exploreTechBtn = document.querySelector('[data-translate="btn-explore"]');
+    
+    if (exploreTechBtn) {
+        exploreTechBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'tecnology.html';
+        });
+    }
+});
