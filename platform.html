@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voxel Engine | Compiler Studio</title>
+    <title>Voxel Engine | Compiler Studio Avanzado</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,156 +14,105 @@
             --border: rgba(59, 130, 246, 0.2);
             --text: #e2e8f0;
             --text-muted: #64748b;
+            --accent-success: #10b981;
         }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: var(--bg-dark);
             color: var(--text);
             font-family: 'Inter', sans-serif;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: flex; flex-direction: column;
             overflow: hidden;
         }
 
-        /* Top Bar de la Plataforma */
         .platform-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 24px;
-            height: 60px;
-            background: var(--panel-bg);
-            border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 24px; height: 60px;
+            background: var(--panel-bg); border-bottom: 1px solid var(--border);
         }
 
         .logo-area {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff;
+            display: flex; align-items: center; gap: 8px;
         }
 
         .back-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
+            background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+            padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s;
         }
 
-        .back-btn:hover {
-            color: #fff;
-            border-color: var(--accent);
-        }
+        .back-btn:hover { color: #fff; border-color: var(--accent); }
 
-        /* Contenedor Principal Splitted */
         .workspace {
-            display: flex;
-            flex: 1;
-            height: calc(100vh - 60px);
+            display: flex; flex: 1; height: calc(100vh - 60px);
         }
 
-        /* Panel Izquierdo: Compilador e Inputs */
         .compiler-panel {
-            width: 380px;
-            background: var(--panel-bg);
-            border-right: 1px solid var(--border);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            box-sizing: border-box;
-            overflow-y: auto;
+            width: 380px; background: var(--panel-bg); border-right: 1px solid var(--border);
+            padding: 24px; display: flex; flex-direction: column; gap: 16px;
+            box-sizing: border-box; overflow-y: auto;
         }
 
-        .panel-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            margin: 0;
-            color: #fff;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .panel-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; margin: 0; color: #fff; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
 
         label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            color: var(--text-muted); letter-spacing: 0.05em;
         }
 
         select, input[type="range"], input[type="text"] {
-            width: 100%;
-            background: #07080d;
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            box-sizing: border-box;
-            outline: none;
-            font-family: 'Inter', sans-serif;
+            width: 100%; background: #07080d; border: 1px solid var(--border);
+            color: #fff; padding: 10px; border-radius: 6px; box-sizing: border-box; outline: none;
         }
 
-        input[type="text"] {
-            font-family: monospace;
-            color: #3b82f6;
-            font-weight: bold;
-        }
-
-        /* Pantalla de Consola/Telemetría */
         .console-output {
-            min-height: 150px;
-            flex: 1;
-            background: #040508;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #10b981;
-            overflow-y: auto;
-            white-space: pre-wrap;
+            min-height: 100px; flex: 1; background: #040508;
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 6px;
+            padding: 12px; font-family: monospace; font-size: 0.75rem; color: #10b981;
+            overflow-y: auto; white-space: pre-wrap;
         }
 
-        /* Panel Derecho: Visualizador de Matriz Completa */
+        /* --- VIEWPORT MAXIMIZADO Y LAYOUT COMPACTO --- */
         .viewport-panel {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            flex: 1; display: grid;
+            grid-template-rows: 1fr auto; 
             background: radial-gradient(circle at center, #0b0d16 0%, #05060a 100%);
             position: relative;
         }
 
-        canvas {
-            max-width: 90%;
-            max-height: 85%;
+        .canvas-container {
+            flex: 1; display: flex; justify-content: center; align-items: center;
+            position: relative; width: 100%; height: 100%;
         }
 
+        canvas {
+            width: 100%; height: 100%; display: block; cursor: crosshair;
+        }
+
+        /* PANEL INTERACTIVO DE EXPLICACIÓN */
+        .interpretation-box {
+            background: rgba(13, 15, 24, 0.9);
+            border-top: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            padding: 18px 30px; box-sizing: border-box;
+            position: relative; z-index: 20;
+        }
+
+        .interpretation-title {
+            font-family: 'Space Grotesk', sans-serif; color: #fff; font-size: 1rem;
+            margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px;
+        }
+
+        .interpretation-text { font-size: 0.88rem; color: #94a3b8; margin: 0; line-height: 1.5; }
+        .variable-badge { background: rgba(59, 130, 246, 0.15); color: var(--accent); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 0.8rem; }
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--accent-success); padding: 1px 5px; border-radius: 4px; font-family: monospace; font-size: 0.8rem; }
         .viewport-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-family: monospace;
+            position: absolute; top: 20px; right: 20px; background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border); padding: 6px 12px; border-radius: 20px;
+            font-size: 0.75rem; font-family: monospace; z-index: 10;
         }
     </style>
 </head>
@@ -172,7 +121,7 @@
     <header class="platform-header">
         <div class="logo-area">
             <div style="width: 8px; height: 8px; background: var(--accent); border-radius: 50%;"></div>
-            VOXEL ENGINE // PLATFORM STUDIO
+            VOXEL ENGINE // PLATFORM STUDIO INTERACTIVO
         </div>
         <button class="back-btn" onclick="window.location.href='index.html'">← Exit Studio</button>
     </header>
@@ -190,13 +139,22 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Custom Formula Parser (Text Input)</label>
-                <input type="text" id="formula-input" value="sin(x) * cos(y)" placeholder="e.g. sin(x) * cos(y)">
+            <div class="form-group" id="metal-group" style="display: none;">
+                <label>Target Metálico de la Placa</label>
+                <select id="metal-type">
+                    <option value="2.14">Cesio (Cs) — Φ = 2.14 eV</option>
+                    <option value="2.30">Potasio (K) — Φ = 2.30 eV</option>
+                    <option value="4.70">Plata (Ag) — Φ = 4.70 eV</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label>Mathematical Presets (Or Select Mode Above)</label>
+                <label>Custom Formula Parser</label>
+                <input type="text" id="formula-input" value="sin(x) * cos(y)">
+            </div>
+
+            <div class="form-group">
+                <label>Mathematical Presets</label>
                 <select id="equation-selector">
                     <option value="wave3d">f(x, y) = sin(x) * cos(y)</option>
                     <option value="cone">f(x, y) = 1 - sqrt(x² + y²)</option>
@@ -208,15 +166,20 @@
             <div class="form-group">
                 <label>Matrix Sampling Resolution</label>
                 <select id="resolution-selector">
-                    <option value="8">8³ Grid (Draft)</option>
-                    <option value="16" selected>16³ Grid (Standard Hardware)</option>
-                    <option value="24">24³ Grid (High-Density Push)</option>
+                    <option value="12">12³ Grid (Draft Rápido)</option>
+                    <option value="18" selected>18³ Grid (Recomendado)</option>
+                    <option value="24">24³ Grid (Alta Densidad)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Signal Modulation Frequency</label>
-                <input type="range" id="freq-modulation" min="0.4" max="2.5" step="0.1" value="1.0">
+                <label id="freq-label">Signal Modulation Frequency (Frecuencia ν)</label>
+                <input type="range" id="freq-modulation" min="0.4" max="2.5" step="0.1" value="1.2">
+            </div>
+
+            <div class="form-group">
+                <label id="amplitude-label">Signal Amplitude / Light Intensity (Amplitud A)</label>
+                <input type="range" id="amp-modulation" min="0.2" max="3.0" step="0.1" value="1.5">
             </div>
 
             <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
@@ -226,106 +189,167 @@
         </aside>
 
         <main class="viewport-panel">
-            <div class="viewport-badge">RENDER MODE: VOLUMETRIC_MATRIX</div>
-            <canvas id="studio-canvas" width="550" height="480"></canvas>
+            <div class="canvas-container" id="canvas-holder">
+                <div class="viewport-badge" id="render-badge">RENDER MODE: VOLUMETRIC_MATRIX</div>
+                <canvas id="studio-canvas"></canvas>
+            </div>
+            
+            <section class="interpretation-box">
+                <h3 class="interpretation-title" id="interp-title">
+                    <span style="width: 8px; height: 8px; background: #fbbf24; border-radius: 50%;"></span>
+                    Análisis Espacial Activo
+                </h3>
+                <p class="interpretation-text" id="interp-desc">
+                    Mueve el cursor sobre la malla de puntos para examinar la telemetría, el comportamiento matemático de la fórmula o el desprendimiento de energía cinética en tiempo real.
+                </p>
+            </section>
         </main>
     </div>
 
     <script>
         const canvas = document.getElementById('studio-canvas');
         const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvas-holder');
         const eqSelect = document.getElementById('equation-selector');
         const resSelect = document.getElementById('resolution-selector');
         const freqSlider = document.getElementById('freq-modulation');
+        const ampSlider = document.getElementById('amp-modulation'); // Captura del nuevo slider
         const consoleLogs = document.getElementById('console-logs');
-
-        // Referencias seguras a los nuevos componentes del DOM
         const modeSelector = document.getElementById('mode-selector');
         const formulaInput = document.getElementById('formula-input');
+        const metalGroup = document.getElementById('metal-group');
+        const metalType = document.getElementById('metal-type');
+        const renderBadge = document.getElementById('render-badge');
+
+        const interpTitle = document.getElementById('interp-title');
+        const interpDesc = document.getElementById('interp-desc');
 
         let tick = 0;
+        let mouseX = -1000, mouseY = -1000;
+        let hoveredVoxel = null;
 
-        // Proyección isométrica limpia
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            mouseX = -1000; mouseY = -1000;
+            hoveredVoxel = null;
+        });
+
+        modeSelector.addEventListener('change', () => {
+            if (modeSelector.value === 'photoelectric') {
+                metalGroup.style.display = 'block';
+                renderBadge.innerText = "RENDER MODE: QUANTUM_EMISSION";
+            } else {
+                metalGroup.style.display = 'none';
+                renderBadge.innerText = `RENDER MODE: ${modeSelector.value.toUpperCase()}_MATRIX`;
+            }
+        });
+
         function project(x, y, z) {
             const isoX = (x - y) * Math.cos(Math.PI / 6);
             const isoY = (x + y) * Math.sin(Math.PI / 6) - z;
             return {
                 x: canvas.width / 2 + isoX,
-                y: canvas.height / 2 + isoY + 20
+                y: canvas.height / 2 + isoY + 40 
             };
         }
 
-        // Intérprete y Evaluador Matemático Procedimental Seguro
-        function evaluateEquation(equation, cx, cy, freq, t) {
+        function evaluateEquation(equation, cx, cy, freq, amp, t) {
             const mode = modeSelector.value;
 
-            // 1. Intercepción Cuántica: Efecto Fotoeléctrico
             if (mode === 'photoelectric') {
-                const threshold = 0.8; 
-                // Fenómeno ondulatorio base golpeando la superficie metálica
-                const energyWave = Math.sin(cx * freq + t) * Math.cos(cy * freq + t) * 3;
-                // Si supera la función de trabajo del metal, los electrones se eyectan (vóxeles suben libremente)
-                return energyWave > threshold ? energyWave * 1.8 : 0.1; 
-            }
-
-            // 2. Si el usuario seleccionó evaluar la caja de texto directo
-            if (equation === 'custom_input') {
-                try {
-                    let textFormula = formulaInput.value.toLowerCase()
-                        .replace(/x/g, `(${cx})`)
-                        .replace(/y/g, `(${cy})`)
-                        .replace(/sin/g, 'Math.sin')
-                        .replace(/cos/g, 'Math.cos')
-                        .replace(/sqrt/g, 'Math.sqrt')
-                        .replace(/pi/g, 'Math.PI');
-                    
-                    let evalResult = Function(`return ${textFormula}`)();
-                    return isNaN(evalResult) ? 0 : evalResult * freq;
-                } catch (e) {
-                    return 0; // Protege el render si escribe una fórmula incompleta
+                const phi = parseFloat(metalType.value);
+                const photonEnergy = freq * 3.2; 
+                const kineticEnergy = photonEnergy - phi;
+                
+                // La amplitud en el efecto fotoeléctrico controla la corriente/flujo de electrones eyectados (intensidad de onda)
+                const wave = Math.sin(cx * 1.2 + t) * Math.cos(cy * 1.2 + t) * amp;
+                if (kineticEnergy > 0) {
+                    return Math.max(0.1, (wave + amp) * kineticEnergy * 0.4);
+                } else {
+                    return 0.08; 
                 }
             }
 
-            // 3. Ecuaciones Matemáticas por Defecto
+            if (equation === 'custom_input') {
+                try {
+                    let textFormula = formulaInput.value.toLowerCase()
+                        .replace(/x/g, `(${cx})`).replace(/y/g, `(${cy})`)
+                        .replace(/sin/g, 'Math.sin').replace(/cos/g, 'Math.cos')
+                        .replace(/sqrt/g, 'Math.sqrt');
+                    let evalResult = Function(`return ${textFormula}`)();
+                    return isNaN(evalResult) ? 0 : evalResult * freq * (amp * 0.7);
+                } catch (e) { return 0; }
+            }
+
             switch (equation) {
-                case 'wave3d':
-                    return Math.sin(cx * freq + t) * Math.cos(cy * freq + t) * 4;
-                case 'cone':
-                    const dist = Math.sqrt(cx * cx + cy * cy);
-                    return Math.sin(dist * freq - t) * 3;
-                case 'pulse':
-                    return Math.cos((cx * cx - cy * cy) * 0.2 * freq - t) * 3.5;
-                default:
-                    return 0;
+                case 'wave3d': return Math.sin(cx * freq + t) * Math.cos(cy * freq + t) * 2.5 * amp;
+                case 'cone': return (1 - Math.sqrt(cx*cx + cy*cy)*0.2) * 2 * amp * Math.sin(t);
+                case 'pulse': return Math.cos((cx * cx - cy * cy) * 0.2 * freq - t) * 2.3 * amp;
+                default: return 0;
             }
         }
 
-        // Consola de telemetría avanzada corregida (evita errores de propiedades undefined)
-        function logPipeline(equationName, size, extraData = {}) {
+        function logPipeline(equationName, size) {
             const timestamp = new Date().toLocaleTimeString();
-            const mode = modeSelector.value;
-            let analyticsText = '';
+            consoleLogs.innerHTML = `[${timestamp}] COMPILER: Parsing [${equationName.toUpperCase()}]\n` +
+                                    `[${timestamp}] AMPlITUDE: Modulation updated to ${parseFloat(ampSlider.value)}x\n` +
+                                    `[${timestamp}] PIPELINE: Streaming matrix telemetry active at 60 FPS.`;
+        }
 
-            // Protección de datos opcionales de entrada
-            const volume = extraData.volume !== undefined ? extraData.volume : 0;
-            const currentFreq = extraData.freq !== undefined ? extraData.freq : parseFloat(freqSlider.value);
-
-            if (mode === 'integral') {
-                analyticsText = `\n[${timestamp}] ANALYTICS: Calculated Volume under Surface: ${volume.toFixed(4)} u³\n` +
-                                `[${timestamp}] CALC: Riemann Double Integral [∫∫ f(x,y) dx dy] Concluded.`;
-            } else if (mode === 'photoelectric') {
-                const h = 6.626e-34; 
-                const freqHz = currentFreq * 1.4e14;
-                const energy = (h * freqHz * 1e19).toFixed(3); 
-                analyticsText = `\n[${timestamp}] QUANTUM: Incident Photon Energy (h*ν): ${energy} eV\n` +
-                                `[${timestamp}] STATUS: Electron kinetic discharge verified. Threshold cleared.`;
-            } else {
-                analyticsText = `\n[${timestamp}] PHYSICS: Wave Propagation Phase: ${(tick % (2 * Math.PI)).toFixed(2)} rad`;
+        // --- MANIPULADOR DE TELEMETRÍA DINÁMICA ---
+        function runDynamicTelemetry(voxel, freq, amp, volume) {
+            if (!voxel) {
+                if (Math.random() < 0.02) {
+                    interpTitle.innerHTML = `<span style="width: 8px; height: 8px; background: #fbbf24; border-radius: 50%;"></span> Monitoreo Global del Pipeline`;
+                    interpDesc.innerHTML = `El motor está procesando el entorno con una amplitud base de <span class="variable-badge">${amp}x</span>. Modula los controles para observar la deformación espacial.`;
+                }
+                return;
             }
 
-            consoleLogs.innerHTML = `[${timestamp}] COMPILER: Parsing target [${equationName.toUpperCase()}] [MODE: ${mode.toUpperCase()}]\n` +
-                                    `[${timestamp}] MEMORY: Allocated ${Math.pow(size, 3)} voxel positions in space.` + 
-                                    analyticsText + `\n[${timestamp}] PIPELINE: Direct stream streaming at 60 FPS...`;
+            let title = "";
+            let desc = "";
+
+            if (voxel.mode === 'photoelectric') {
+                const phi = parseFloat(metalType.value);
+                const photonEnergy = (freq * 3.2).toFixed(2);
+                const ek = (photonEnergy - phi).toFixed(2);
+                const currentMetalName = metalType.options[metalType.selectedIndex].text.split('—')[0];
+
+                title = `🔬 Cuántica Hover: Colisión Fotónica en Matriz Conductora`;
+                if (ek > 0) {
+                    desc = `Coordenada flotante (${voxel.x}, ${voxel.y}). El fotón aporta <span class="variable-badge">${photonEnergy} eV</span>. 
+                            Al superar la barrera del <b>${currentMetalName} ($\\Phi = ${phi} \\text{ eV}$)</b>, la <b>Energía Cinética Máxima ($E_k$) es de ${ek} eV</b>. 
+                            La amplitud de onda actual es de <span class="variable-badge">${amp}x</span>, lo que incrementa la densidad de corriente fotónica y eleva los vóxeles a <span class="variable-badge">${voxel.z} u</span>.`;
+                } else {
+                    desc = `Zona en reposo <span style="color:#ef4444;">(Umbral No Alcanzado)</span>. Aunque aumentes la intensidad/amplitud a <span class="variable-badge">${amp}x</span>, los electrones <b>no escapan</b> porque la energía del fotón (${photonEnergy} eV) sigue siendo menor que la función de trabajo del metal (${phi} eV). ¡La amplitud solo afecta si el fotón tiene suficiente energía!`;
+                }
+            } 
+            else if (voxel.mode === 'integral') {
+                title = `📐 Cálculo: Análisis del Diferencial de Volumen en Malla`;
+                desc = `Cursor sobre el prisma en <span class="variable-badge">X: ${voxel.x}</span>, <span class="variable-badge">Y: ${voxel.y}</span>. 
+                        La altura local escalada por la amplitud es <span class="badge-success">Z: ${voxel.z} u</span>. El volumen total calculado bajo estas condiciones de contorno es de 
+                        <span class="variable-badge">${volume.toFixed(2)} u³</span>.`;
+            } 
+            else {
+                title = `📊 Campo Escalar: Evaluación de Función en Espacio R³`;
+                desc = `Nodo ubicado en <span class="variable-badge">X: ${voxel.x}</span>, <span class="variable-badge">Y: ${voxel.y}</span>. 
+                        El valor de salida escalar mapeado es <span class="badge-success">Z: ${voxel.z}</span>. La amplitud multiplicadora está expandiendo el rango vertical en un factor de <span class="variable-badge">${amp}x</span>.`;
+            }
+
+            interpTitle.innerHTML = title;
+            interpDesc.innerHTML = desc;
         }
 
         function renderWorkspace() {
@@ -334,79 +358,89 @@
 
             const gridSize = parseInt(resSelect.value);
             const freq = parseFloat(freqSlider.value);
+            const amp = parseFloat(ampSlider.value); // Lectura del valor de amplitud
             const equation = eqSelect.value;
             const mode = modeSelector.value;
 
-            let volumetricSum = 0; 
+            let volumetricSum = 0;
+            let currentClosestVoxel = null;
+            let minDistance = 22; 
 
-            // Renderizado Isométrico de atrás hacia adelante
+            const geometryScale = Math.min(canvas.width, canvas.height) / (gridSize * 1.25);
+
             for (let x = 0; x < gridSize; x++) {
                 for (let y = 0; y < gridSize; y++) {
-                    
                     const cx = (x - gridSize / 2) * (12 / gridSize);
                     const cy = (y - gridSize / 2) * (12 / gridSize);
-                    
-                    let cz = evaluateEquation(equation, cx, cy, freq, tick);
+                    let cz = evaluateEquation(equation, cx, cy, freq, amp, tick);
 
-                    if (cz > 0) {
-                        volumetricSum += cz * (12 / gridSize) * (12 / gridSize);
+                    if (cz > 0) volumetricSum += cz * (12 / gridSize) * (12 / gridSize);
+
+                    const pt = project(cx * gridSize * geometryScale * 0.09, cy * gridSize * geometryScale * 0.09, cz * gridSize * geometryScale * 0.04);
+                    const radius = Math.max(1.5, (geometryScale * 0.12) + cz * 0.08);
+                    let opacity = Math.max(0.18, Math.min(1, (cz + 5) / 10));
+
+                    const dx = mouseX - pt.x;
+                    const dy = mouseY - pt.y;
+                    const mouseDist = Math.sqrt(dx * dx + dy * dy);
+
+                    let isHovered = false;
+                    if (mouseDist < minDistance) {
+                        minDistance = mouseDist;
+                        isHovered = true;
+                        currentClosestVoxel = {
+                            x: cx.toFixed(2), y: cy.toFixed(2), z: cz.toFixed(2), mode: mode
+                        };
                     }
 
-                    const scaleFactor = 240 / gridSize;
-                    const pt = project(cx * scaleFactor, cy * scaleFactor, cz * (scaleFactor * 0.4));
-                    
-                    const radius = Math.max(1.5, (scaleFactor * 0.15) + cz * 0.1);
-                    let opacity = Math.max(0.15, Math.min(1, (cz + 5) / 10));
-
-                    // --- MÓDULO INTEGRAL: Proyección de Columnas de Riemann ---
                     if (mode === 'integral') {
-                        const basePt = project(cx * scaleFactor, cy * scaleFactor, 0);
+                        const basePt = project(cx * gridSize * geometryScale * 0.09, cy * gridSize * geometryScale * 0.09, 0);
                         ctx.beginPath();
                         ctx.moveTo(basePt.x, basePt.y);
                         ctx.lineTo(pt.x, pt.y);
-                        ctx.strokeStyle = `rgba(59, 130, 246, ${opacity * 0.25})`;
-                        ctx.lineWidth = scaleFactor * 0.4;
+                        ctx.strokeStyle = isHovered ? 'rgba(255,255,255,0.4)' : `rgba(59, 130, 246, ${opacity * 0.25})`;
+                        ctx.lineWidth = geometryScale * 0.25;
                         ctx.stroke();
                     }
 
-                    // --- DIBUJO DEL VÓXEL INDIVIDUAL ---
                     ctx.beginPath();
-                    ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+                    ctx.arc(pt.x, pt.y, isHovered ? radius * 1.5 : radius, 0, Math.PI * 2);
                     
-                    // Colores temáticos dinámicos según el modo científico
                     let hue = 210 + (cz * 4); 
                     if (mode === 'photoelectric') {
-                        hue = 135 + (cz * 12); // Tono Verde Esmeralda Cuántico
-                        opacity = cz > 0.3 ? 0.85 : 0.15;
+                        const phi = parseFloat(metalType.value);
+                        if ((freq * 3.2) - phi > 0) {
+                            hue = 135 + (cz * 12); 
+                            opacity = cz > 0.15 ? 0.85 : 0.2;
+                        } else {
+                            hue = 0; 
+                            opacity = 0.15;
+                        }
                     } else if (mode === 'integral') {
-                        hue = 265 + (cz * 2); // Tono Violeta Matemático de Datos
+                        hue = 265 + (cz * 2);
                     }
 
-                    ctx.fillStyle = `hsla(${hue}, 90%, 55%, ${opacity})`;
+                    ctx.fillStyle = isHovered ? '#ffffff' : `hsla(${hue}, 90%, 55%, ${opacity})`;
                     ctx.fill();
                 }
             }
 
-            // Actualización segura y amortiguada del Log en consola para no congelar el navegador
-            if (Math.random() < 0.02) { 
-                logPipeline(equation, gridSize, { volume: volumetricSum, freq: freq });
+            runDynamicTelemetry(currentClosestVoxel, freq, amp, volumetricSum);
+
+            if (Math.random() < 0.015) { 
+                logPipeline(equation, gridSize);
             }
 
             requestAnimationFrame(renderWorkspace);
         }
 
-        // Event listeners globales mapeados limpiamente
         eqSelect.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
         resSelect.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
         freqSlider.addEventListener('input', () => logPipeline(eqSelect.value, resSelect.value));
-        modeSelector.addEventListener('change', () => logPipeline(eqSelect.value, resSelect.value));
-        formulaInput.addEventListener('input', () => {
-            eqSelect.value = 'custom_input'; // Cambia automáticamente el preset al escribir texto libre
-            logPipeline('CUSTOM_INPUT', resSelect.value);
-        });
+        ampSlider.addEventListener('input', () => logPipeline(eqSelect.value, resSelect.value));
+        formulaInput.addEventListener('input', () => { eqSelect.value = 'custom_input'; });
 
-        // Lanzar de forma segura la primera ejecución del sistema
-        logPipeline(eqSelect.value, resSelect.value, { volume: 0, freq: parseFloat(freqSlider.value) });
+        logPipeline(eqSelect.value, resSelect.value);
         renderWorkspace();
     </script>
 </body>
