@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voxel Engine | Compiler Studio Avanzado</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/assets/icons/rubik.ico">
     <style>
         :root {
             --bg-dark: #06070d;
@@ -285,8 +286,13 @@
             if (equation === 'custom_input') {
                 try {
                     let textFormula = formulaInput.value.toLowerCase()
-                        .replace(/x/g, `(${cx})`).replace(/y/g, `(${cy})`)
-                        .replace(/sin/g, 'Math.sin').replace(/cos/g, 'Math.cos')
+                        .replace(/x/g, `(${cx})`)
+                        .replace(/y/g, `(${cy})`)
+                        .replace(/t/g, `(${t})`) 
+                        .replace(/sin/g, 'Math.sin')
+                        .replace(/cos/g, 'Math.cos')
+                        .replace(/tan/g, 'Math.tan')
+                        .replace(/abs/g, 'Math.abs')
                         .replace(/sqrt/g, 'Math.sqrt');
                     let evalResult = Function(`return ${textFormula}`)();
                     return isNaN(evalResult) ? 0 : evalResult * freq * (amp * 0.7);
